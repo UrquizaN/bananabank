@@ -14,9 +14,16 @@ defmodule BananaBankWeb.UsersJSON do
     }
   end
 
+  def login(%{token: token}) do
+    %{
+      message: "User authenticated!",
+      bearer: token
+    }
+  end
+
   def delete(%{user: user}), do: %{message: "User deleted successfully", data: data(user)}
 
-  def show(%{user: user}), do: %{data: data(user)}
+  def get(%{user: user}), do: %{data: data(user)}
 
   def update(%{user: user}), do: %{message: "User updated successfully", data: data(user)}
 

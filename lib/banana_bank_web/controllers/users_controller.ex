@@ -2,6 +2,7 @@ defmodule BananaBankWeb.UsersController do
   use BananaBankWeb, :controller
 
   alias BananaBank.Users
+  alias BananaBankWeb.Token
   alias Users.User
 
   action_fallback BananaBankWeb.FallbackController
@@ -31,10 +32,10 @@ defmodule BananaBankWeb.UsersController do
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, %User{} = user} <- Users.show(id) do
+    with {:ok, %User{} = user} <- Users.get(id) do
       conn
       |> put_status(:ok)
-      |> render(:show, user: user)
+      |> render(:get, user: user)
     end
   end
 
@@ -43,6 +44,18 @@ defmodule BananaBankWeb.UsersController do
       conn
       |> put_status(:ok)
       |> render(:update, user: user)
+    end
+  end
+
+  def login(conn, params) do
+    with {:ok, user} <- Users.login(params) do
+      token = Token.sign(user)
+
+      IO.inspect(token)
+
+      conn
+      |> put_status(:ok)
+      |> render(:login, token: token)
     end
   end
 end
